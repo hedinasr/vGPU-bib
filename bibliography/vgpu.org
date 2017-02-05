@@ -206,7 +206,7 @@ Après avoir virtualisé nos serveurs, nos réseaux (VLAN) et notre
 espace de stockage, il est donc logique de vouloir virtualiser nos GPU, afin d’en bénéficier au sein de machines virtuelles.
 
 [fn:1] /Logical Volume Manager/ permet la création et la gestion de volume logique sous Linux
-[fn:2] Le snapshot est ...
+[fn:2] https://doc.ubuntu-fr.org/lvm#snapshot
 * Virtualisation de GPU
 Les noeuds de calculs de transcodage sont hébergés dans des machines
 virtuelles réparties sur plusieurs hyperviseurs Xen.  C'est dans ce
