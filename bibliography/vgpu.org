@@ -14,17 +14,17 @@ d'informations. Les besoins en calculs sont toujours plus important,
 et la parallélisation des tâches exigeantes en ressources de calculs,
 devient indispensable.  Ces dernières années, le GPU (/Graphics
 Processing Unit/) a démontré son utilité par sa puissance de calcul en
-intégrant divers domaines qui ne lui était pas destiné à l'origine. La
+intégrant divers domaines qui ne lui étaient pas destiné à l'origine. La
 finance, la physique, l'astronomie, et d'autres domaines bénéficient de
 la puissance de calcul des GPUs.  Se pose donc naturellement la
 question de l'utilisation des GPUs dans des architectures distribuées
 mais aussi virtualisées.  Voici les différentes questions auxquelles
 nous répondrons:
 
-+ Quelles sont les applications serveurs qui peuvent utiliser les GPUs ?
-+ Quelles sont les solutions de virtualisation qui supportent le partage de GPUs ?
++ Quelles applications serveurs peuvent utiliser les GPUs ?
++ Quelles solutions de virtualisation supportent le partage de GPUs ?
 + Comment `ffmpeg' peut utiliser les GPUs ?
-+ Quelles sont les librairies permettant d'utiliser les GPUs ?
++ Quelles librairies permettent d'utiliser les GPUs ?
 + Outils de compilation sur GPU compatibles avec le calcul réparti ou la virtualisation ?
 + Calcul réparti sur plusieurs machines en utilisant les GPUs
   
@@ -44,30 +44,31 @@ noeuds de calculs répartis sur plusieurs serveurs.  Le transcodage
 vidéo consiste à transformer le format de codage original d'un média
 (audio ou vidéo) vers un autre format.  Le transcodage est un
 processus gourmand en ressources de calculs, l'objectif étant donc
-d'optimiser cette tâche.  Le GPU, ou processeur graphique, à
-initialement été conçu pour le calcul de l'affichage. De par son
-architecture hautement parallèle qui le rend extrêmement efficace pour
+d'optimiser cette tâche afin d'améliorer le processus de diffusion vidéo.
+Le GPU, ou processeur graphique, a initialement été conçu pour le calcul
+de l'affichage.
+De par son architecture hautement parallèle qui le rend extrêmement efficace pour
 le rendu 3D, il est aujourd'hui très utilisé dans divers domaines
 scientifiques, financier, vidéo-ludique, mais aussi dans le processus
 de transcodage vidéo. Les noeuds de calculs de transcodage sont tous
-virtualisés, en effet, chaque noeud correspond en fait à une machine
-virtuelle hébergé sur hyperviseur Xen. Le processus de virtualisation
+virtualisés. En effet, chaque noeud correspond à une machine
+virtuelle hébergée sur hyperviseur Xen. Le processus de virtualisation
 des GPU n'a pas aussi été aussi automatique que celui du CPU, de
-la mémoire, des E/S ou même celui des périphérique PCI type USB. Grace
-aux différents travaux de chercheurs dans le domaine, plusieurs
-solutions ont été proposées, chacunes d'entre elles ayant leur
-avantages et leurs inconvénients.  Ce papier présente l'ensemble des
+la mémoire, des E/S ou même celui des périphérique PCI type USB.
+Grace aux différents travaux de chercheurs dans le domaine, plusieurs
+solutions ont été proposées, chacunes d'entre elles ayant leurs
+avantages et leurs inconvénients. Ce papier présente l'ensemble des
 solutions existantes, ainsi qu'un point de vue critique sur une
-solution en particulier: XenGT.  Le papier est organisé de la façon
+solution en particulier: XenGT. Le papier est organisé de la façon
 suivante:
 + Présentation et vue d'ensemble du GPU
-+ Rappel (ou pas) sur la virtualisation et les différentes techniques existantes
++ Rappel sur la virtualisation et les différentes techniques existantes
 + Présentation de la virtualisation des GPUs
 + Présentation des outils de programmation parallèle et du gestionnaire de jobs OAR
 + Présentation de ffmpeg
-+ En conclusion, nous présenterons un choix parmis les solutions de
-  virtualisations de GPUs qui auront été apportées. Nous proposerons
-  aussi plusieurs scénarios d'expérimentations
+En conclusion, nous présenterons un choix parmis les solutions de
+virtualisations de GPUs qui auront été apportées. Nous proposerons
+aussi plusieurs scénarios d'expérimentations
 
 * GPU - /Graphic Processing Unit/
 Dans cette partie nous présenterons quelques notions de base sur les
@@ -79,7 +80,7 @@ GPUs.
   initialement créé dans le but d'accélérer les calculs pour le rendu
   (affichage) graphique (jeux videos, imagerie, modélisation, etc..).
   Contrairement aux CPUs qui ne sont dotés que de quelques coeurs de
-  calculs, les GPUs sont quant à eux munis de plusieurs milliers de
+  calculs, les GPUs sont munis de plusieurs milliers de
   micro-coeur de calculs (cf. figure 2). Cette architecture hautement
   parallèle permet d'avoir des gains en performances de l'ordre de 2 à
   100 fois celle des CPU. Ces micro-coeurs peuvent exécuter une même
@@ -91,14 +92,14 @@ GPUs.
   #+NAME: SIMD
   [[./images/SIMD2.png]]
 
-- _Pourquoi a-t-on besoin des GPUs ? Quel contexte d'utilisation ?_
+- _Pourquoi a-t-on besoin des GPUs ? Dans quel contexte d'utilisation ?_
 
   En raison des qualités exceptionnelles de calcul massivement
   parallèle que proposent les GPUs, il est devenu courant de les
   utiliser pour des applications non graphiques.  C'est ce que l'on appelle
   le GPGPU cite:owens07_survey_gener_purpos_comput_graph_hardw (/General Purpose computing on Graphic Processor Unit/).
 
-  Le GPGPU a permis la conception d'API facilitant ainsi aux développeurs l'utilisation des GPUs dans leurs applications.
+  Le GPGPU a permis la conception d'API, facilitant ainsi aux développeurs l'utilisation des GPUs dans leurs applications.
 
   Les GPUs sont donc aujourd'hui beaucoup utilisés pour résoudre des
   problèmes scientifiques qui ont des besoins en calculs très
@@ -117,10 +118,10 @@ GPUs.
   [[./images/GPU_vs_CPU.png]]
   
 * Virtualisation
-_Qu'est ce que la virtualisation (rappel sur la virtualisation) ?_
+_Qu'est ce que la virtualisation ?_
 
-Avant d'expliquer comment le GPU et les machines virtuelles cohabitent
-ensemble, il est pertinent de rappeler quelques notions
+Avant d'expliquer comment le GPU et les machines virtuelles cohabitent,
+il est pertinent de rappeler quelques notions
 fondamentales sur la virtualisation, afin de mettre en évidence
 certains aspects fondamentaux.
 
@@ -129,24 +130,22 @@ d'héberger plusieurs machines virtuelles ayant chacune son propre
 système d'exploitation. L'un des nombreux avantages que propose la
 virtualisation, est que si une machine virtuelle (un service par
 exemple: le mail ou un site web) tombe en panne, cela n'affectera pas
-les autres machines virtuelles (si la panne provient bien sur de
-l'application, et non de l'hyperviseur, mais nous y reviendrons).
+les autres machines virtuelles.
 
-Il existe plusieurs techniques pour faire de la virtualisation cite:TanenbaumBos201403 : on a
+Il existe plusieurs techniques pour faire de la virtualisation cite:TanenbaumBos201403 : nous avons
 d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
-- Un hyperviseur de type 2 est un simple application installée sur l'OS
+- Un hyperviseur de type 2 est une simple application installée sur l'OS
   hôte permettant de lancer un ou plusieurs OS invités.  On appelle
   aussi cette méthode "empilement de systèmes" cite:virtualisation.
   Les machines virtuelles invitées se comportent comme étant
   de simples processus utilisateurs. Les accès matériels (E/S, mémoire …)
   sont émulés par l'OS hôte.
 
-  Exemple d'hyperviseurs de type 2: VirtualBox, VMWare Workstation, Qemu
+  Exemple d'hyperviseurs de type 2: VirtualBox, VMWare Workstation, Qemu.
 
   #+CAPTION: Hyperviseur de type 2
   #+NAME: hyp2
   [[./images/hyp-2.png]]
-
 
 - Un hyperviseur de type 1 quant à lui s'exécute directement sur le
   matériel. Pour exécuter les instructions sensibles des machines
@@ -155,20 +154,20 @@ d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
   sensibles vers l'hyperviseur, qui émule ce que le matériel devrait
   faire.
 
-  Exemple d'hyperviseurs de type 1: ESX Server, vSphere
+  Exemple d'hyperviseurs de type 1: ESX Server, vSphere.
 
   #+CAPTION: Hyperviseur de type 1
   #+NAME: hyp1
   [[./images/hyp-1.png]]
 
 Il y a aussi, comme autre technique de virtualisation, la
-paravirtualisation.  La paravirtualisation consiste à modifier l'OS
+paravirtualisation. La paravirtualisation consiste à modifier l'OS
 hôte (modification du code source du système d'exploitation), pour que
 les machines virtuelles soient vus comme de simples processus
 utilisateurs faisant appel à leur système d'exploitation
 (l'hyperviseur), en utilisant une API (/Application Programme
-Interface/).  Les OS hôte sont eux aussi adaptés et
-optimisés. L'avantage de cette méthode est avant tout un gain de
+Interface/). Les OS hôte sont eux aussi adaptés et
+optimisés. L'avantage de cette méthode est avant tout le gain de
 performance considérable puisqu'il n'y a plus d'émulation
 d'instructions sensibles.
 
@@ -188,7 +187,8 @@ large dans l'environnement de travail actuel (ENS):
   architecture permet d'héberger chaque service dans une seule machine
   virtuelle. Cela facilite la gestion du service puisqu'il ne
   cohabite pas avec d'autres.  (par exemple: serveur web = 1 machine,
-  serveur de fichier = 1 machine). D’autre part, si une machine virtuelle tombe en panne elle ne pénalisera pas les autres machines autour d’elle.
+  serveur de fichier = 1 machine). D’autre part, si une machine virtuelle tombe en panne,
+  elle ne pénalisera pas les autres machines autour d’elle.
 
   Nous sommes en charge de plus d'une quarantaine de machines
   virtuelles réparties sur plus de 20 hyperviseurs Xen. Le parc est
@@ -197,7 +197,7 @@ large dans l'environnement de travail actuel (ENS):
   l’est également. La virtualisation de stockage consiste
   à fournir un niveau d'abstraction ne présentant plus que l'espace de
   stockage effectif comme une seule unité de stockage logique (on
-  parle aussi de volume group dans le jargon LVM [fn:1]).  Cette virtualisation du stockage nous permet:
+  parle aussi de /volume group/ dans le jargon LVM [fn:1]).  Cette virtualisation du stockage nous permet:
   - de moins nous soucier de l'architecture physique des disques,
   - une très grande souplesse d'utilisation (notamment avec les machines virtuelles),
   - la sauvegarde (migration / clonage) de machines virtuelles sans interruption de service (grâce au mécanisme de snapshot [fn:2]).
@@ -213,12 +213,11 @@ virtuelles réparties sur plusieurs hyperviseurs Xen.  C'est dans ce
 contexte que s'est naturellement posé la question de la virtualisation
 GPUs dans le processus de transcodage vidéo.  Cette question soulève
 tout de même un obstacle majeur: comment peut-on utiliser les
-ressources du GPU dans un environnement totalement virtualisés?
+ressources du GPU dans un environnement totalement virtualisé ?
 
 - Nous expliquerons comment les deux technologies (GPU +
-  virtualisation) peuvent cohabiter ensemble.
-- Comment utiliser les deux ? Est-ce-que ça marche bien ? Quelles
-  sont les utilisations actuelles ?
+  virtualisation) peuvent cohabiter.
+- Comment utiliser les deux ? Quelles sont les utilisations actuelles ?
 
 La virtualisation permet le partage de ressources matérielles (E/S, RAM,
 CPU) entre plusieurs machines virtuelles. Le véritable challenge de la
@@ -238,7 +237,7 @@ Plusieurs techniques de virtualisations de GPU existent:
   privilégié [fn:3] sur l'hyperviseur, et les applications
   qui sont sur les machines virtuelles font appel aux fonctions de l'API (CUDA dans
   le cas des deux techniques).  Les appels de fonctions sont
-  transférés vers le dom0 qui les exécutent.
+  transférés vers le dom0 qui les exécute.
   
   #+CAPTION: Architecture vCUDA. HostOS correspond au dom0 Xen. VMM = Hyperviseur cite:shi09 
   #+NAME: vcuda
@@ -250,10 +249,10 @@ Plusieurs techniques de virtualisations de GPU existent:
   performances natives du GPU pour la machine virtuelle (car les appels GPU passeront
   directement vers le GPU, et non plus par le système hôte) –
   cependant les autres machines virtuelles n'ont pas accès au GPU. Les
-  équipements qui sont disponibles sur le bus PCI-Express du système
+  équipements disponibles sur le bus PCI-Express du système
   hôte sont virtualisés en utilisant des technologies de
   virtualisation d'I/O qui sont implémentés par les fabricants de
-  micro-processeurs (Intel/AMD). Ces technologies de virtualisation sont possible grâce aux instructions VT-d et IOMMU cite:iovtd .
+  micro-processeurs (Intel/AMD). Ces technologies de virtualisation sont possibles grâce aux instructions VT-d et IOMMU cite:iovtd.
 
   Cette méthode permet donc d'avoir des performances natives sur la machine virtuelle
   puisqu'il n'y a plus besoin de passer par le système hôte. De plus,
@@ -270,18 +269,15 @@ Plusieurs techniques de virtualisations de GPU existent:
 
 [fn:3] Un domaine privilégié est une machine virtuelle ayant un accès direct au matériel. Ce domaine privilégié fait référence au dom0 de Xen.
 * Parallélisation
-A l'ENS nous avons un ensemble de quelques 13000 vidéos diffusés. La
+à l'ENS nous avons un ensemble de quelques 13000 vidéos diffusés. La
 tâche de transcodage de ces vidéos est répartis entre plusieurs noeud
 de calculs (6 au total) qui sont gérés à l'aide du gestionnaire de
-jobs OAR. OAR est un gestionnaire de tâche distribués permettant la
+jobs OAR. OAR est un gestionnaire de tâches distribuées permettant la
 réserve de ressources dans des clusters pour le HPC (/High
 Performance Computing/).
 
-Présentation des technologies de parallélisation de calcul utilisant
-les GPUs (OpenMP, OpenCL, etc…).
-
 Afin de tirer profit de la capacité de calcul des GPUs, ils nous faut
-les outils permettant des les utiliser.  Des APIs sont fournis pour
+les outils permettant de les utiliser.  Des APIs sont fournis pour
 programmer les GPUs. Deux familles d'APIs nous sont proposés:
 - GC APIs pour /Graphics Computing APIs/ Ensemble des APIs nous
   permettant de faire la modélisation d'objet 3D. Voici certaines
@@ -309,9 +305,8 @@ problématique de gestion de noeuds virtualisés de calculs
 distribués. OAR cite:oar  permet de répondre à cette problématique.
 
 OAR est un gestionnaire de tâches et de ressources pour les
-infrastructures réparties. C'est cet outil que nous utilisons à
-l'ENS pour la gestion de nos noeuds de transcodage vidéo. OAR
-fonctionne avec un système de job. A chaque job est associé une tâche
+infrastructures réparties. Cet outil est utilisé à l'ENS pour la gestion des noeuds de transcodage vidéo.
+OAR fonctionne avec un système de job. à chaque job est associé une tâche
 à effectuer (un script par exemple) et une ressource à consommer. Pour la gestion des ressources, OAR utilise `cpuset' qui
 est une fonctionnalité du noyau Linux à partir de 2.6 qui permet de
 contraindre un processus à n'utiliser qu'une partie des ressources
@@ -321,7 +316,7 @@ OAR a permis la transformation de l'infrastructure existante en un
 supercalculateur virtuel. En effet, au lieu d'allouer du matériel
 spécifique pour le transcodage vidéo, OAR nous permet d'utiliser le
 temps de calcul libre sur les serveurs de qualification et de
-développement (donc pas la production). Cela permet donc de réduire
+développement. Cela permet donc de réduire
 fortement le coût de l'infrastructure en utilisant des serveurs plus
 anciens.
 
@@ -334,9 +329,9 @@ utilisateurs afin qu'ils puissent y mettre des vidéos. Pour pouvoir
 archiver et distribuer ces vidéos, il faut passer par une plateforme
 Web (ATV ou ViSA) afin de procéder à l'indexation puis au transcodage
 vidéo.  Les tâches de transcodage sont donc distribuées dans
-l'architecture répartie.  (à l'heure ou j'écris ces lignes, 2000
+l'architecture répartie.  (à l'heure où j'écris ces lignes, 2000
 vidéos sont en re-transcodage, répartis sur 7 noeuds de calculs (30
-ressources = 30 transcodage parallèle)).
+ressources = 30 transcodages parallèles)).
 
 #+CAPTION: 300 jobs OAR (Source: Munin ENS)
 #+NAME: OAR
@@ -360,7 +355,7 @@ les processeurs ARM ou encore PowerPC sont supportés par `ffmpeg'.
 `ffmpeg' peut aussi utiliser ce qu'on appelle des ASIC
 (/Application-Specific Integrated Circuit/) pour exécuter les
 algorithmes de compression/décompression. Un ASIC est tout simplement
-un circuit intégré qui est optimisé pour effectuer une tâche
+un circuit intégré optimisé pour effectuer une tâche
 précise. Par exemple NVIDIA intègre dans ces cartes graphiques des
 ASIC optimisés pour l'encodage et le décodage vidéo (NVDEC et
 NVENC). Ces deux composants sont accompagnés par leurs API respectives
@@ -374,7 +369,7 @@ NVENC). Ces deux composants sont accompagnés par leurs API respectives
 le CPU des tâches de transcodage et donc augmenter les performances.
 
 * XenGT
-XenGT cite:183931 (anciennement gvirt et maintenant GVT-g) est un projet
+XenGT cite:183931 (anciennement gVirt et maintenant GVT-g) est un projet
 open source de virtualisation de GPU initié par Intel. Cette technique
 de virtualisation est de type /mediated pass-through/, ce qui permet
 un partage du GPU entre les machines virtuelles en étant très proche  des performances natives du GPU.
@@ -384,11 +379,11 @@ partis du noyau Linux de Xen, en modifiant le module vMMU cite:183931 .
 Pour pouvoir partager le GPU entre les machines virtuelles, gVirt
 utilise un mécanisme (implémenté à l'aide d'un module noyau dans le
 dom0) de déroutement et émulation des instructions (ou opérations)
-privilégiés.  Cela permet de sécuriser et d'isoler les machines
+privilégiées. Cela permet de sécuriser et d'isoler les machines
 virtuelles entre elles.
 
 Sans un tel mécanisme, les machines virtuelles pourraient avoir accès
-à la mémoire graphiques des autres machines virtuelles.
+à la mémoire graphique des autres machines virtuelles.
 
 Un GPU virtuel est présenté à chaque machine virtuelle. Ce vGPU permet
 aux machines virtuelles d'accéder directement aux ressources du GPU
@@ -409,11 +404,11 @@ Un inconvénient majeur de XenGT: il ne supporte que les GPUs Intel.
 La procédure d'installation de XenGT est décrite sur le dépôt GitHub cite:xengt-git.
 * Conclusion
 Après avoir présenté les différentes techniques de virtualisation de
-GPUs, l'architecture distribué de transcodage vidéo, ainsi que les
+GPUs, l'architecture distribuée de transcodage vidéo, ainsi que les
 besoins potentiels de l'utilisation des GPUs, voici quelques points et
 remarques sur le choix de la technique à utiliser:
 
-En utilisant une technique du type /API forwarding/, on reste bloqué
+En utilisant une technique du type /API forwarding/, nous restons bloqué
 par l'API à utiliser. En effet, un hyperviseur peut très bien héberger
 plusieurs machines virtuelles hébergeant des applications différentes qui ont besoin d'API
 différentes. Cette solution n'est donc pas envisageable dans une
@@ -425,7 +420,7 @@ sa mise en oeuvre:
   l'hyperviseur Xen[fn github], sa mise à l'échelle est très
   complexe. Dans notre contexte, chaque noeud de calcul se trouve sur
   un hyperviseur différent.  Il faudrait donc réinstaller entièrement
-  ces hyperviseurs, ce qui, dans un contexte de production n'est pas
+  ces hyperviseurs, ce qui, dans un contexte de production, n'est pas
   faisable.
 - d'autre part, XenGT ne supporte pour l'instant que les GPUs
   Intel. Il est donc possible de l'utiliser avec les GPUs intégrés aux
@@ -447,23 +442,23 @@ xl pci-assignable-list
 xl pci-attach <domain-id> <pci-id> <slot-nb>
 #+END_SRC 
 
-Cette méthode à tout de même un inconvénient: seule une machine
+Cette méthode a tout de même un inconvénient: seule une machine
 virtuelle aura accès au GPU. Bien que cela ne soit pas problématique
 dans notre cas (car 1 noeud de calcul = 1 serveur), cette méthode
 reste contraignante dans la mesure où notre architecture tend vers une
 diminution du nombre d'hyperviseurs. En effet, les machines sont de
-plus en plus puissantes, et donc le nombre de serveurs physiques
-diminuent en conséquence. On arrivera donc à un moment ou cette
-technique ne pourra plus convenir à nos besoins.  Elle reste cependant
-la mieux à même d'être expérimenté.
+plus en plus puissantes, et le nombre de serveurs physiques
+diminuent en conséquence. On arrivera donc à un moment où cette
+technique ne pourra plus convenir à nos besoins. Dans notre contexte,
+cette méthode reste la plus simple à expérimenter.
 
 Voici des propositions d'expérimentations pour virtualiser le GPU:
 
 Si chaque hyperviseur contient un noeud de calcul (une machine
 virtuelle), on pourrait simplement utiliser la technique du /direct
 pass-through/ afin d'assigner entièrement le GPU de l'hyperviseur à la
-machine virtuelle.  On pourrait tout d'abord simplement faire des test
-avec la puce graphique intégré (s'il y'en a une), ou faire des tests
+machine virtuelle.  On pourrait tout d'abord simplement faire des tests
+avec la puce graphique intégrée, ou faire des tests
 avec plusieurs cartes graphiques d'entrée de gamme. La seule
 modification à apporter sera de re-compiler ffmpeg pour qu'il puisse
 utiliser l'accélération matérielle. Cette expérimentation simple à
@@ -478,4 +473,4 @@ vidéo cite:schot16_capab_raspb_pi_big_data.
 
 
 bibliographystyle:unsrt
-bibliography:gpu.bib
+bibliography:vgpu.bib
