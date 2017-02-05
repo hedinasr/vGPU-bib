@@ -437,7 +437,7 @@ suffira simplement de charger dynamiquement le module noyau
 # sur le dom0
 modprobe xen-pciback
 xl pci-assignable-add <PCI id du GPU>
-# pour vérifier que le GPU est bien disponible
+# pour vérifier que le GPU est disponible
 xl pci-assignable-list 
 xl pci-attach <domain-id> <pci-id> <slot-nb>
 #+END_SRC 
@@ -457,7 +457,7 @@ Voici des propositions d'expérimentations pour virtualiser le GPU:
 Si chaque hyperviseur contient un noeud de calcul (une machine
 virtuelle), on pourrait simplement utiliser la technique du /direct
 pass-through/ afin d'assigner entièrement le GPU de l'hyperviseur à la
-machine virtuelle.  On pourrait tout d'abord simplement faire des tests
+machine virtuelle.  On pourrait tout d'abord faire des tests
 avec la puce graphique intégrée, ou faire des tests
 avec plusieurs cartes graphiques d'entrée de gamme. La seule
 modification à apporter sera de re-compiler ffmpeg pour qu'il puisse
