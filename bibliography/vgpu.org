@@ -89,7 +89,7 @@ GPUs.
 
   #+CAPTION: Single instruction, multiple data (SIMD) (Source: Wikipedia)
   #+NAME: SIMD
-  [[./SIMD2.png]]
+  [[./images/SIMD2.png]]
 
 - _Pourquoi a-t-on besoin des GPUs ? Quel contexte d'utilisation ?_
 
@@ -114,7 +114,7 @@ GPUs.
 
   #+CAPTION: GPU vs. CPU (Source: https://svi.nl/HuygensGPU)
   #+NAME: GPU_VS_CPU
-  [[./GPU_vs_CPU.png]]
+  [[./images/GPU_vs_CPU.png]]
   
 * Virtualisation
 _Qu'est ce que la virtualisation (rappel sur la virtualisation) ?_
@@ -145,7 +145,7 @@ d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
 
   #+CAPTION: Hyperviseur de type 2
   #+NAME: hyp2
-  [[./hyp-2.png]]
+  [[./images/hyp-2.png]]
 
 
 - Un hyperviseur de type 1 quant à lui s'exécute directement sur le
@@ -159,7 +159,7 @@ d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
 
   #+CAPTION: Hyperviseur de type 1
   #+NAME: hyp1
-  [[./hyp-1.png]]
+  [[./images/hyp-1.png]]
 
 Il y a aussi, comme autre technique de virtualisation, la
 paravirtualisation.  La paravirtualisation consiste à modifier l'OS
@@ -174,7 +174,7 @@ d'instructions sensibles.
 
 #+CAPTION: Paravirtualisation
 #+NAME: para
-[[./para.png]]
+[[./images/para.png]]
 
 Exemple de paravirtualisateur: Xen
 
@@ -242,7 +242,7 @@ Plusieurs techniques de virtualisations de GPU existent:
   
   #+CAPTION: Architecture vCUDA. HostOS correspond au dom0 Xen. VMM = Hyperviseur cite:shi09 
   #+NAME: vcuda
-  [[./vcuda.png]]
+  [[./images/vcuda.png]]
  
 - /Direct pass-through/: transfert direct.
   Cette méthode "réserve" le
@@ -327,7 +327,7 @@ anciens.
 
 #+CAPTION: Exemple d'architecture avec 4 noeuds de calcul avec un stockage partagé (SAN)
 #+NAME: oar
-[[./oar.png]]
+[[./images/oar.png]]
 
 Un espace de stockage partagé (SAN) est disponible pour les
 utilisateurs afin qu'ils puissent y mettre des vidéos. Pour pouvoir
@@ -340,7 +340,7 @@ ressources = 30 transcodage parallèle)).
 
 #+CAPTION: 300 jobs OAR (Source: Munin ENS)
 #+NAME: OAR
-[[./oar-day.png]]
+[[./images/oar-day.png]]
 
 * ffmpeg
 Le logiciel de transcodage vidéo utilisé est `ffmpeg'. Ce dernier permet
@@ -368,7 +368,7 @@ NVENC). Ces deux composants sont accompagnés par leurs API respectives
 
 #+CAPTION: ASIC NVDEC et NVENC sur les GPUs NVIDIA (Pascal GPU)
 #+NAME: nvidia_asic
-[[./nvidia.png]]
+[[./images/nvidia.png]]
 
 `ffmpeg' peut donc utiliser l'accélération matérielle pour décharger
 le CPU des tâches de transcodage et donc augmenter les performances.
@@ -396,7 +396,7 @@ sans l'intervention de l'hyperviseur.
 
 #+CAPTION: Architecture de XenGT cite:xengt
 #+NAME: xengt
-[[./xengt3.png]]
+[[./images/xengt3.png]]
 
 Pour répondre aux différents appels au GPU provenant des machines
 virtuelles, XenGT utilise un ordonnanceur qui implémente une politique de
