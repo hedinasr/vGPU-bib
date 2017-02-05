@@ -1,0 +1,16 @@
+**** http://www.rcuda.net/pub/rCUDA_booth_talk_SC13_v6.pdf
+**** https://people.eecs.berkeley.edu/~istoica/classes/cs294/11/notes/04-aurojit-gpgpu.pdf
+**** https://ppl.stanford.edu/papers/pact11-brown-slides.pdf
+**** https://events.linuxfoundation.org/sites/events/files/slides/XenGT-Xen%20Summit-REWRITE%203RD%20v4.pdf
+**** http://ieeexplore.ieee.org/document/6969471/?reload=true
+**** http://isi.edu/~mkkang/papers/Cloud_2014.pdf
+**** http://www.s3.eurecom.fr/docs/fc14_maurice.pdf
+**** https://keio.pure.elsevier.com/en/publications/gpuvm-gpu-virtualization-at-the-hypervisor
+**** https://www.sfu.ca/~rws1/papers/On-GPU-Pass-Through-Performance-for-Cloud-Gaming-Experiments-and-Analysis.pdf
+**** https://blog.xenproject.org/2014/03/11/xen-graphics-virtualization-xengt/
+**** [https://developer.nvidia.com/ffmpeg].
+**** [http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/FFMPEG-with-NVIDIA-Acceleration-on-Ubuntu_UG_v01.pdf]
+**** [https://www.reddit.com/r/PleX/comments/4hahqh/ffmpeg_cpu_vs_gpu_transcoding_performance_numbers/]
+**** [http://on-demand.gputechconf.com/gtc/2016/presentation/s6226-abhijit-patait-high-performance-video.pdf]
+**** https://software.intel.com/en-us/articles/intel-virtualization-technology-for-directed-io-vt-d-enhancing-intel-platforms-for-efficient-virtualization-of-io-devices
+**** https://01.org/xen/blogs/srclarkx/2013/graphics-virtualization-xengt
