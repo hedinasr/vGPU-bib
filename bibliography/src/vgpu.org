@@ -78,7 +78,7 @@ GPUs.
   
   Le GPU (/Graphic Processing Unit/), ou carte graphique, a été
   initialement créé dans le but d'accélérer les calculs pour le rendu
-  (affichage) graphique (jeux videos, imagerie, modélisation, etc..).
+  (affichage) graphique (jeux videos, imagerie, modélisation).
   Contrairement aux CPUs qui ne sont dotés que de quelques coeurs de
   calculs, les GPUs sont munis de plusieurs milliers de
   micro-coeur de calculs (cf. figure 2). Cette architecture hautement
@@ -90,7 +90,7 @@ GPUs.
 
   #+CAPTION: Single instruction, multiple data (SIMD) (Source: Wikipedia)
   #+NAME: SIMD
-  [[./images/SIMD2.png]]
+  [[../images/SIMD2.png]]
 
 - _Pourquoi a-t-on besoin des GPUs ? Dans quel contexte d'utilisation ?_
 
@@ -115,7 +115,7 @@ GPUs.
 
   #+CAPTION: GPU vs. CPU (Source: https://svi.nl/HuygensGPU)
   #+NAME: GPU_VS_CPU
-  [[./images/GPU_vs_CPU.png]]
+  [[../images/GPU_vs_CPU.png]]
   
 * Virtualisation
 _Qu'est ce que la virtualisation ?_
@@ -145,7 +145,7 @@ d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
 
   #+CAPTION: Hyperviseur de type 2
   #+NAME: hyp2
-  [[./images/hyp-2.png]]
+  [[../images/hyp-2.png]]
 
 - Un hyperviseur de type 1 quant à lui s'exécute directement sur le
   matériel. Pour exécuter les instructions sensibles des machines
@@ -158,7 +158,7 @@ d'abord ce que l’on appelle les hyperviseurs de type 1 et 2.
 
   #+CAPTION: Hyperviseur de type 1
   #+NAME: hyp1
-  [[./images/hyp-1.png]]
+  [[../images/hyp-1.png]]
 
 Il y a aussi, comme autre technique de virtualisation, la
 paravirtualisation. La paravirtualisation consiste à modifier l'OS
@@ -173,7 +173,7 @@ d'instructions sensibles.
 
 #+CAPTION: Paravirtualisation
 #+NAME: para
-[[./images/para.png]]
+[[../images/para.png]]
 
 Exemple de paravirtualisateur: Xen
 
@@ -241,7 +241,7 @@ Plusieurs techniques de virtualisations de GPU existent:
   
   #+CAPTION: Architecture vCUDA. HostOS correspond au dom0 Xen. VMM = Hyperviseur cite:shi09 
   #+NAME: vcuda
-  [[./images/vcuda.png]]
+  [[../images/vcuda.png]]
  
 - /Direct pass-through/: transfert direct.
   Cette méthode "réserve" le
@@ -269,7 +269,7 @@ Plusieurs techniques de virtualisations de GPU existent:
 
 [fn:3] Un domaine privilégié est une machine virtuelle ayant un accès direct au matériel. Ce domaine privilégié fait référence au dom0 de Xen.
 * Parallélisation
-à l'ENS nous avons un ensemble de quelques 13000 vidéos diffusés. La
+À l'ENS nous avons un ensemble de quelques 13000 vidéos diffusés. La
 tâche de transcodage de ces vidéos est répartis entre plusieurs noeud
 de calculs (6 au total) qui sont gérés à l'aide du gestionnaire de
 jobs OAR. OAR est un gestionnaire de tâches distribuées permettant la
@@ -279,34 +279,34 @@ Performance Computing/).
 Afin de tirer profit de la capacité de calcul des GPUs, ils nous faut
 les outils permettant de les utiliser.  Des APIs sont fournis pour
 programmer les GPUs. Deux familles d'APIs nous sont proposés:
-- GC APIs pour /Graphics Computing APIs/ Ensemble des APIs nous
+- *GC APIs* pour /Graphics Computing APIs/ Ensemble des APIs nous
   permettant de faire la modélisation d'objet 3D. Voici certaines
   bibliothèques:
-  + OpenGL (Khronos Group) : libraire open source, multi plateforme,
+  + _OpenGL_ (Khronos Group): libraire open source, multi plateforme,
     multi langage, utilisé pour les rendus 2D et 3D.  Très utilisé
     dans le domaine du jeu vidéo, modélisation scientifique, réalité
     virtuelle, etc…
-  + Direct3D (Microsoft): librairie de rendu 3D. Ne marche que pour le
+  + _Direct3D_ (Microsoft): librairie de rendu 3D. Ne marche que pour le
     système d’exploitation Windows.
-  + Vulkan (Khronos Group): librairie très récente (16 février 2016)
+  + _Vulkan_ (Khronos Group): librairie très récente (16 février 2016)
     de modélisation 3D.
 
-- GPC APIs pour /General Purpose Computing APIs/ Ensembles des APIs
+- *GPC APIs* pour /General Purpose Computing APIs/. Ensembles des APIs
   nous permettant d'utiliser les performances du GPU pour des
   applications non graphique. Nous pouvons citer:
-  + CUDA (/Compute Unified Device Architecture/) (NVIDIA) (parler de la théorie?)
-  + OpenCL (/Open Computing Language/) (Khronos Group)
+  + _CUDA_ (/Compute Unified Device Architecture/) (NVIDIA)
+  + _OpenCL_ (/Open Computing Language/) (Khronos Group)
 
 Gestion de l'architecture distribuée (ou système répartis): nous
 venons de discuter sur l'ensemble des techniques pouvant tirer parti
 des GPUs et de leur capacités de calculs hautement
 parallélisés. Cependant, ces techniques ne répondent pas à la
 problématique de gestion de noeuds virtualisés de calculs
-distribués. OAR cite:oar  permet de répondre à cette problématique.
+distribués. OAR cite:oar permet de répondre à cette problématique.
 
 OAR est un gestionnaire de tâches et de ressources pour les
 infrastructures réparties. Cet outil est utilisé à l'ENS pour la gestion des noeuds de transcodage vidéo.
-OAR fonctionne avec un système de job. à chaque job est associé une tâche
+OAR fonctionne avec un système de job. À chaque job est associé une tâche
 à effectuer (un script par exemple) et une ressource à consommer. Pour la gestion des ressources, OAR utilise `cpuset' qui
 est une fonctionnalité du noyau Linux à partir de 2.6 qui permet de
 contraindre un processus à n'utiliser qu'une partie des ressources
@@ -322,20 +322,20 @@ anciens.
 
 #+CAPTION: Exemple d'architecture avec 4 noeuds de calcul avec un stockage partagé (SAN)
 #+NAME: oar
-[[./images/oar.png]]
+[[../images/oar.png]]
 
 Un espace de stockage partagé (SAN) est disponible pour les
 utilisateurs afin qu'ils puissent y mettre des vidéos. Pour pouvoir
 archiver et distribuer ces vidéos, il faut passer par une plateforme
 Web (ATV ou ViSA) afin de procéder à l'indexation puis au transcodage
 vidéo.  Les tâches de transcodage sont donc distribuées dans
-l'architecture répartie.  (à l'heure où j'écris ces lignes, 2000
-vidéos sont en re-transcodage, répartis sur 7 noeuds de calculs (30
-ressources = 30 transcodages parallèles)).
+l'architecture répartie.  (À l'heure où j'écris ces lignes, 2000
+vidéos sont en re-transcodage, répartis sur 7 noeuds de calculs - 30
+ressources = 30 transcodages parallèles).
 
 #+CAPTION: 300 jobs OAR (Source: Munin ENS)
 #+NAME: OAR
-[[./images/oar-day.png]]
+[[../images/oar-day.png]]
 
 * ffmpeg
 Le logiciel de transcodage vidéo utilisé est `ffmpeg'. Ce dernier permet
@@ -363,7 +363,7 @@ NVENC). Ces deux composants sont accompagnés par leurs API respectives
 
 #+CAPTION: ASIC NVDEC et NVENC sur les GPUs NVIDIA (Pascal GPU)
 #+NAME: nvidia_asic
-[[./images/nvidia.png]]
+[[../images/nvidia.png]]
 
 `ffmpeg' peut donc utiliser l'accélération matérielle pour décharger
 le CPU des tâches de transcodage et donc augmenter les performances.
@@ -372,10 +372,10 @@ le CPU des tâches de transcodage et donc augmenter les performances.
 XenGT cite:183931 (anciennement gVirt et maintenant GVT-g) est un projet
 open source de virtualisation de GPU initié par Intel. Cette technique
 de virtualisation est de type /mediated pass-through/, ce qui permet
-un partage du GPU entre les machines virtuelles en étant très proche  des performances natives du GPU.
+un partage du GPU entre les machines virtuelles, en étant très proche des performances natives du GPU.
 
-Pour implémenter leur solution, les trois ingénieurs d'Intel K. Tian, Y. Dong, D. Cowperthwaite sont
-partis du noyau Linux de Xen, en modifiant le module vMMU cite:183931 .
+Pour implémenter leur solution, les trois ingénieurs d'Intel, K. Tian, Y. Dong et D. Cowperthwaite sont
+partis du noyau Linux de Xen, en modifiant le module vMMU cite:183931.
 Pour pouvoir partager le GPU entre les machines virtuelles, gVirt
 utilise un mécanisme (implémenté à l'aide d'un module noyau dans le
 dom0) de déroutement et émulation des instructions (ou opérations)
@@ -391,7 +391,7 @@ sans l'intervention de l'hyperviseur.
 
 #+CAPTION: Architecture de XenGT cite:xengt
 #+NAME: xengt
-[[./images/xengt3.png]]
+[[../images/xengt3.png]]
 
 Pour répondre aux différents appels au GPU provenant des machines
 virtuelles, XenGT utilise un ordonnanceur qui implémente une politique de
@@ -409,16 +409,16 @@ besoins potentiels de l'utilisation des GPUs, voici quelques points et
 remarques sur le choix de la technique à utiliser:
 
 En utilisant une technique du type /API forwarding/, nous restons bloqué
-par l'API à utiliser. En effet, un hyperviseur peut très bien héberger
-plusieurs machines virtuelles hébergeant des applications différentes qui ont besoin d'API
+par l'API à utiliser. En effet, un hyperviseur peut très bien avoir
+plusieurs machines virtuelles, hébergeant des applications différentes, qui ont besoin d'API
 différentes. Cette solution n'est donc pas envisageable dans une
 infrastructure hétérogène.
 
-XenGT pourrait être une solution mais plusieurs inconvénients empêchent
+XenGT pourrait être une solution, mais plusieurs inconvénients empêchent
 sa mise en oeuvre:
-- comme XenGT est directement implémenté dans le noyau Linux et dans
-  l'hyperviseur Xen[fn github], sa mise à l'échelle est très
-  complexe. Dans notre contexte, chaque noeud de calcul se trouve sur
+- XenGT étant directement implémenté dans le noyau Linux et dans
+  l'hyperviseur Xen, le passage à l'échelle est très complexe. 
+  Dans notre contexte, chaque noeud de calcul se trouve sur
   un hyperviseur différent.  Il faudrait donc réinstaller entièrement
   ces hyperviseurs, ce qui, dans un contexte de production, n'est pas
   faisable.
