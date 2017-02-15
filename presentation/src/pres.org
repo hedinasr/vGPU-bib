@@ -4,19 +4,45 @@
 #+LANGUAGE: fr
 
 #+STARTUP: beamer
-#+OPTIONS: H:1
+#+OPTIONS: H:2
 #+LATEX_CLASS: beamer
 #+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
-#+BEAMER_THEME: default
+#+BEAMER_THEME: Madrid
 #+BEAMER_COLOR_THEME:
 #+BEAMER_FONT_THEME:
 #+BEAMER_INNER_THEME:
 #+BEAMER_OUTER_THEME:
 #+BEAMER_HEADER:
 
+# L'idée général de la présentation n'est pas de présenter en détail les
+# techniques de virtualisations de GPU, ni de faire un résumé de la recherche
+# bibliographique, mais plûtot d'expliquer pourquoi le GPU est un élément
+# indispensable pour le HPC de manière général. 
+# Il s'agira aussi d'expliquer (dans un deuxième point) un élément capital
+# dans la virtualisation de GPU : l'IOMMU / VT-D
+
 * Introduction
 ** Contexte
+   École Normale Supérieure, 13 000 vidéos, clusters OAR.
 * Objectif
+  Amélioration des performances du processus de transcodage vidéo.
 * Solutions
+  Utiliser les GPUs ...
+** GPU
+   Comment et pourquoi l'utilisation des GPUs peut-elle améliorer
+   les performances de transcodage?
+** How It Works ?
+* Environnement
+  # On détaillera dans cette partie l'architecture répartis du
+  # cluster de calculs pour le transcodage vidéo.
+  # On proposera, par la suite, les techniques de virtualisations de GPU
+  # les plus adaptés à notre archi.
+** Xen
+** OAR
+   ... dans des machines virtuelles
+* Techniques
+*** Direct pass-through
+    IOMMU VT-D
+    
 * Discussion
 * Questions ?
