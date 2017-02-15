@@ -1,0 +1,22 @@
+#+TITLE: Virtualisation de GPU
+#+AUTHOR: Hedi Nasr
+#+EMAIL: hedi.nasr@etu.univ-lyon1.fr
+#+LANGUAGE: fr
+
+#+STARTUP: beamer
+#+OPTIONS: H:1
+#+LATEX_CLASS: beamer
+#+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
+#+BEAMER_THEME: default
+#+BEAMER_COLOR_THEME:
+#+BEAMER_FONT_THEME:
+#+BEAMER_INNER_THEME:
+#+BEAMER_OUTER_THEME:
+#+BEAMER_HEADER:
+
+* Introduction
+** Contexte
+* Objectif
+* Solutions
+* Discussion
+* Questions ?
