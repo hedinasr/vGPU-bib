@@ -12,7 +12,10 @@
 #+BEAMER_FONT_THEME:
 #+BEAMER_INNER_THEME:
 #+BEAMER_OUTER_THEME:
-#+BEAMER_HEADER:
+
+#+BEAMER_HEADER: \subtitle{Document subtitle}
+#+BEAMER_HEADER: \institute[INST]{Université Claude Bernard Lyon 1\\\url{http://www.univ-lyon1.fr}}
+#+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{../images/UCBL.jpg}}
 
 # L'idée général de la présentation n'est pas de présenter en détail les
 # techniques de virtualisations de GPU, ni de faire un résumé de la recherche
@@ -27,27 +30,42 @@
   # pour avoir une vue plus générale.
 ** Contexte
    École Normale Supérieure, 13 000 vidéos, cluster OAR.
+
+   [[../images/ens.jpg]]
 ** De manière plus générale
    Les applications d'aujourd'hui sont de plus en plus des applications
-   multimédias (audio, vidéo, jeu-vidéo)
+   multimédias (audio, vidéo, jeu-vidéo). Les utilisateurs sont de plus en
+   plus exigeant en terme de qualité de service (HD/4K).
 * Objectifs
 ** Gain en performance
-   Amélioration des performances du processus de transcodage vidéo.
+   - Dans notre contexte:
+     amélioration des performances du processus de transcodage vidéo.
+   - Dans un contexte plus global:
+     + fournir une meilleure expérience utilisateur pour les applications multimédias.
+     + augmenter les performances des calculs dans des domaines divers et variés (intelligence
+       artificielle, météorologie, etc...). 
 ** Faible coût
    Montrer qu'avec un faible investissement, on obtient des performances de
-   l'ordre de 2 à 100 fois par rapport au CPU classique.
+   l'ordre de 2 à 100 fois supérieur par rapport au CPU classique.
 * Environnement
   # On détaillera dans cette partie l'architecture répartis du
   # cluster de calculs pour le transcodage vidéo.
   # On proposera, par la suite, les techniques de virtualisations de GPU
   # les plus adaptés à notre archi.
 ** Xen
-   Paravirtualisateur open-source. Technologie éprouvée et reconnue (Amazon EC2)
+   Paravirtualisateur open-source. Technologie éprouvée et reconnue (Amazon EC2).
+
+   [[../images/xen.png]]
 ** OAR
    OAR est un gestionnaire de tâches et de ressources pour les infrastructures réparties.
+
+   #+ATTR_LaTeX: :width 150
+   [[../images/oar.png]]
 ** ffmpeg
    Logiciel de transcodage vidéo pouvant utiliser l'accéleration matérielle pour augmenter la
    rapidité du transcodage.
+   
+   [[../images/ffmpeg.png]]
 ** Architecture 
    [[../images/ens.png]]
 * Solutions
@@ -56,7 +74,7 @@
    graphiques.
 ** Architecture du GPU (1/2)
    - Des milliers de coeurs exécutant une seule instruction (à un instant =t=)
-     sur un même jeu de donnée, en parallèle.
+     sur un même jeu de données, en parallèle.
    - Débit mémoire très rapide (jusqu'à 480 Go/s)
     
 *** NVidia Pascal
@@ -73,13 +91,12 @@
       + la "RAM" du GPU
       + accessible par le GPU *et* le CPU
       + jusqu'à 16Go par GPU
-      + débit allant jusqu'à
     - /Streaming Multiprocessors/ - SMs
       + unités de calculs
 ** Simple Processing Flow
-   - Copie les données de la mémoire du CPU vers la mémoire du GPU
-   - Charge le programme et l'exécute
-   - Copie les résultats du GPU vers le CPU
+   1. Copie les données de la mémoire du CPU vers la mémoire du GPU
+   2. Charge le programme et l'exécute
+   3. Copie les résultats du GPU vers le CPU
 
    
    #+CAPTION: Workflow d'exécution GPU. Source: NVidia
@@ -87,7 +104,7 @@
   [[../images/Data-flow.png]]
 
 ** NVLink
-   Nouvelle technologie proposer par NVidia pour interconnectés ces GPUs en ne passant plus
+   Nouvelle technologie proposée par NVidia pour interconnecter ces GPUs en ne passant plus
    par le bus PCI Express. Les débits peuvent atteindre jusqu'à 160 Go/s en full-duplex (contre 16 Go/s
    pour le PCI Express).
      
@@ -125,8 +142,7 @@
      # + les blocks ont accès à la mémoire globale du GPU
     - *Grid*: composition de blocks
    
-      
-    Le développeur écris un =kernel= et décide du nombre total de threads
+    Le développeur écrit un =kernel= et décide du nombre total de threads
     qui vont exécuter le programme sur le GPU.
 **** CUDA architecture
      :PROPERTIES:
@@ -221,8 +237,6 @@
     - vCUDA (VMRPC)
     - rCUDA (TCP/IP, API Socket)
     - gVim (Xen)
-** Comparaison
-   
 * Conclusion
 ** Conclusion
    Il existe différentes architectures de GPU et différentes techniques pour les virtualiser.
@@ -230,4 +244,4 @@
    Le GPU est donc devenu un élément indispensable pour le /High Performance Computing/.
 * Questions ?
 ** Avez-vous des questions ?
-   
+   Merci
