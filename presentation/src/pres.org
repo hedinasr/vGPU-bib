@@ -22,16 +22,31 @@
 # dans la virtualisation de GPU : l'IOMMU / VT-D
 
 * Introduction
+  # Faire un rappel sur le contexte actuelle qui à mené à faire une recherche
+  # sur le sujet. Prendre ensuite du recul par rapport au contexte
+  # pour avoir une vue plus générale.
 ** Contexte
-   École Normale Supérieure, 13 000 vidéos, clusters OAR.
-* Objectif
-  Amélioration des performances du processus de transcodage vidéo.
+   École Normale Supérieure, 13 000 vidéos, cluster OAR.
+** De manière plus générale
+   Les applications d'aujourd'hui sont de plus en plus des applications
+   multimédias (audio, vidéo, jeu-vidéo)
+* Objectifs
+** Gain en performance
+   Amélioration des performances du processus de transcodage vidéo.
+** Faible coût
+   Montrer qu'avec un faible investissement, on obtient des performances de
+   l'ordre de 2 à 100 fois par rapport au CPU classique.
 * Solutions
-  Utiliser les GPUs ...
 ** GPU
    Comment et pourquoi l'utilisation des GPUs peut-elle améliorer
    les performances de transcodage?
-** How It Works ?
+   |                   | CPU               | GPU   |
+   |-------------------+-------------------+-------|
+   | Nombre de threads | quelques dizaines | > 10K |
+** Architecture du GPU
+*** GDDR
+** Mémoire du GPU
+* 
 * Environnement
   # On détaillera dans cette partie l'architecture répartis du
   # cluster de calculs pour le transcodage vidéo.
@@ -39,10 +54,11 @@
   # les plus adaptés à notre archi.
 ** Xen
 ** OAR
-   ... dans des machines virtuelles
-* Techniques
-*** Direct pass-through
-    IOMMU VT-D
-    
-* Discussion
+* Techniques de virtualisation de GPU
+** Direct pass-through
+   Instructions IOMMU et VT-D.
+   Performances natives du GPU.
+   Tous les hyperviseurs proposent cette méthode.
+** API Interception
+* 
 * Questions ?
