@@ -7,7 +7,7 @@
 #+OPTIONS: H:2
 #+LATEX_CLASS: beamer
 #+COLUMNS: %45ITEM %10BEAMER_env(Env) %10BEAMER_act(Act) %4BEAMER_col(Col) %8BEAMER_opt(Opt)
-#+BEAMER_THEME: Madrid
+#+BEAMER_THEME: JuanLesPins
 #+BEAMER_COLOR_THEME:
 #+BEAMER_FONT_THEME:
 #+BEAMER_INNER_THEME:
@@ -44,7 +44,12 @@
 ** Xen
    Paravirtualisateur open-source. Technologie éprouvée et reconnue (Amazon EC2)
 ** OAR
+   OAR est un gestionnaire de tâches et de ressources pour les infrastructures réparties.
 ** ffmpeg
+   Logiciel de transcodage vidéo pouvant utiliser l'accéleration matérielle pour augmenter la
+   rapidité du transcodage.
+** Architecture 
+   [[../images/ens.png]]
 * Solutions
 ** GPU
    Microprocesseur massivement parallèle conçu pour accélérer les performances des applications
@@ -52,9 +57,9 @@
 ** Architecture du GPU (1/2)
    - Des milliers de coeurs exécutant une seule instruction (à un instant =t=)
      sur un même jeu de donnée, en parallèle.
-   - Débit mémoire très rapide (jusqu'à 480 Go/s[fn:1])
+   - Débit mémoire très rapide (jusqu'à 480 Go/s)
     
-*** NVidia Pacal
+*** NVidia Pascal
 
     | Opérations virgules flottantes | Vitesse       |
     |--------------------------------+---------------|
@@ -69,12 +74,16 @@
       + accessible par le GPU *et* le CPU
       + jusqu'à 16Go par GPU
       + débit allant jusqu'à
-    - /Streaming Multiprocessors/ - SMs[fn:2]
+    - /Streaming Multiprocessors/ - SMs
       + unités de calculs
 ** Simple Processing Flow
    - Copie les données de la mémoire du CPU vers la mémoire du GPU
    - Charge le programme et l'exécute
    - Copie les résultats du GPU vers le CPU
+
+   
+   #+CAPTION: Workflow d'exécution GPU. Source: NVidia
+   #+ATTR_LaTeX: :width 200
   [[../images/Data-flow.png]]
 
 ** NVLink
@@ -85,33 +94,48 @@
 ** API
 *** General-Purpose Computing
     *Objectif*: utiliser le GPU pour des calculs non graphiques (/deep-learning/, bio-chimie, transcodage vidéo, etc...).
-     
+    Panoplie d'outils *developer friendly* permettant le développement d'applications sur GPU:
+    - Bibliothèques numériques
+      + MATLAB, Mathematica
+    - Debuggers et profilers
+      + cuda-gdb
+      + Visual Studio
+    - Compilateur GPU
+      + C
+      + C++
+      + Python
+    - Outils de parallélisme
+      - OpenACC
+      - OpenMP
 *** Compute Unified Device Architecture (CUDA) :B_frame:
     :PROPERTIES:
     :BEAMER_env: frame
     :BEAMER_envargs: [t]
     :END:
+    
 **** SIMT - Nomenclature
      :PROPERTIES:
-     :BEAMER_col: 0.45
+     :BEAMER_col: 0.4
      :BEAMER_env: block
      :END:
     - *Thread*: unité d'exécution
-      + tous les threads exécute le même programme séquentiel
-      + les threads s'exécutent en parallèle
+     # + tous les threads exécute le même programme séquentiel
+     # + les threads s'exécutent en parallèle
     - *Block*: un groupe de threads
-      + les blocks ont accès à la mémoire globale du GPU
+     # + les blocks ont accès à la mémoire globale du GPU
     - *Grid*: composition de blocks
-    
+   
+      
     Le développeur écris un =kernel= et décide du nombre total de threads
     qui vont exécuter le programme sur le GPU.
-
 **** CUDA architecture
      :PROPERTIES:
-     :BEAMER_col: 0.5
+     :BEAMER_col: 0.46
      :BEAMER_env: block
      :BEAMER_envargs: <2->
      :END:
+     
+     #+CAPTION: Modèle d'exécution. Source: NVidia
      [[../images/cuda.png]]
   
 *** Open Computing Language (OpenCL) :B_frame:
@@ -134,43 +158,47 @@
      :BEAMER_env: block
      :BEAMER_envargs: <2->
      :END:
+
+     #+CAPTION: Modèle d'exécution. Source: http://mygsoc.blogspot.fr/2013/07/opencl-framework.html
      [[../images/opencl.png]]
   
-*** OpenACC
+** OpenACC
+   Outil de compilation parallèle sur GPU. Ressemble à OpenMP.
+   Gain de performance significatif. Ne modifie que
+   très peu le code. Permet l'utilisation de la *mémoire unifiée* (mémoire GPU + RAM).
+   # Mais code source fermé, utilisation soumis à licence propriétaire.
+   # (usage académique gratuit).
+   
+   #+CAPTION: Source: NVidia
+   [[../images/openacc.png]]
     
-    Librairie de programmation parallèle sur GPU. Ressemble à OpenMP.
-    Gain de performance significatif. Ne modifie que
-    très peu le code. Permet l'utilisation de la mémoire unifiée (mémoire GPU + RAM).
-    Mais code source fermé, utilisation soumis à licence propriétaire.
-    (usage académique gratuit).
-    
-**** OpenMP - CPU
+*** OpenMP - CPU
     :PROPERTIES:
     :BEAMER_env: frame
     :END:
-     #+BEGIN_SRC c
-     void vecadd(int n, float *c,
-                  const float *a, const float* b)
-      {
-        #pragma omp parallel for
-        for (int i = 0; i < n; i++)
-          c[i] = a[i] + b[i];
-      }
-     #+END_SRC
-
-**** OpenACC - GPU
-     :PROPERTIES:
-     :BEAMER_env: frame
-     :END:
-     #+BEGIN_SRC c
-      void vecadd(int n, float *c,
-                  const float *a, const float* b)
-      {
-        #pragma acc parallel loop
-        for (int i = 0; i < n; i++)
-          c[i] = a[i] + b[i];
-      }
+    #+BEGIN_SRC c
+    void vecadd(int n, float *c,
+                 const float *a, const float* b)
+     {
+       #pragma omp parallel for
+       for (int i = 0; i < n; i++)
+         c[i] = a[i] + b[i];
+     }
     #+END_SRC
+
+*** OpenACC - GPU
+    :PROPERTIES:
+    :BEAMER_env: frame
+    :END:
+    #+BEGIN_SRC c
+     void vecadd(int n, float *c,
+                 const float *a, const float* b)
+     {
+       #pragma acc parallel loop
+       for (int i = 0; i < n; i++)
+         c[i] = a[i] + b[i];
+     }
+   #+END_SRC
 * Techniques de virtualisation de GPU
 ** Pourquoi virtualiser les GPU ?
 *** Virtual Desktop Infrastructure
@@ -198,6 +226,8 @@
 * Conclusion
 ** Conclusion
    Il existe différentes architectures de GPU et différentes techniques pour les virtualiser.
-   Plusieurs API peuvent les utiliser afin de bénéficier de leurs puissances de calculs. 
+   Plusieurs API peuvent les utiliser afin de bénéficier de leurs puissances de calculs.
+   Le GPU est donc devenu un élément indispensable pour le /High Performance Computing/.
 * Questions ?
 ** Avez-vous des questions ?
+   
