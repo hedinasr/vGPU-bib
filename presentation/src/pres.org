@@ -13,7 +13,7 @@
 #+BEAMER_INNER_THEME:
 #+BEAMER_OUTER_THEME:
 
-#+BEAMER_HEADER: \subtitle{Document subtitle}
+#+BEAMER_HEADER: \subtitle{Utilisation des GPUs dans des environnements virtualisés et dans les systèmes de calculs répartis}
 #+BEAMER_HEADER: \institute[INST]{Université Claude Bernard Lyon 1\\\url{http://www.univ-lyon1.fr}}
 #+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{../images/UCBL.jpg}}
 
