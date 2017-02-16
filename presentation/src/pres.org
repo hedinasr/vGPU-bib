@@ -36,29 +36,168 @@
 ** Faible coût
    Montrer qu'avec un faible investissement, on obtient des performances de
    l'ordre de 2 à 100 fois par rapport au CPU classique.
-* Solutions
-** GPU
-   Comment et pourquoi l'utilisation des GPUs peut-elle améliorer
-   les performances de transcodage?
-   |                   | CPU               | GPU   |
-   |-------------------+-------------------+-------|
-   | Nombre de threads | quelques dizaines | > 10K |
-** Architecture du GPU
-*** GDDR
-** Mémoire du GPU
-* 
 * Environnement
   # On détaillera dans cette partie l'architecture répartis du
   # cluster de calculs pour le transcodage vidéo.
   # On proposera, par la suite, les techniques de virtualisations de GPU
   # les plus adaptés à notre archi.
 ** Xen
+   Paravirtualisateur open-source. Technologie éprouvée et reconnue (Amazon EC2)
 ** OAR
+** ffmpeg
+* Solutions
+** GPU
+   Microprocesseur massivement parallèle conçu pour accélérer les performances des applications
+   graphiques.
+** Architecture du GPU (1/2)
+   - Des milliers de coeurs exécutant une seule instruction (à un instant =t=)
+     sur un même jeu de donnée, en parallèle.
+   - Débit mémoire très rapide (jusqu'à 480 Go/s[fn:1])
+    
+*** NVidia Pacal
+
+    | Opérations virgules flottantes | Vitesse       |
+    |--------------------------------+---------------|
+    | /double precision/ (64 bits)   | *5.3 TFLOPS*  |
+    | /single precision/ (32 bits)   | *10.6 TFLOPS* |
+    | /half precision/ (16 bits)     | *21.2 TFLOPS* |
+
+** Architecture du GPU (2/2)
+*** Composants principaux
+    - Mémoire
+      + la "RAM" du GPU
+      + accessible par le GPU *et* le CPU
+      + jusqu'à 16Go par GPU
+      + débit allant jusqu'à
+    - /Streaming Multiprocessors/ - SMs[fn:2]
+      + unités de calculs
+** Simple Processing Flow
+   - Copie les données de la mémoire du CPU vers la mémoire du GPU
+   - Charge le programme et l'exécute
+   - Copie les résultats du GPU vers le CPU
+  [[../images/Data-flow.png]]
+
+** NVLink
+   Nouvelle technologie proposer par NVidia pour interconnectés ces GPUs en ne passant plus
+   par le bus PCI Express. Les débits peuvent atteindre jusqu'à 160 Go/s en full-duplex (contre 16 Go/s
+   pour le PCI Express).
+     
+** API
+*** General-Purpose Computing
+    *Objectif*: utiliser le GPU pour des calculs non graphiques (/deep-learning/, bio-chimie, transcodage vidéo, etc...).
+     
+*** Compute Unified Device Architecture (CUDA) :B_frame:
+    :PROPERTIES:
+    :BEAMER_env: frame
+    :BEAMER_envargs: [t]
+    :END:
+**** SIMT - Nomenclature
+     :PROPERTIES:
+     :BEAMER_col: 0.45
+     :BEAMER_env: block
+     :END:
+    - *Thread*: unité d'exécution
+      + tous les threads exécute le même programme séquentiel
+      + les threads s'exécutent en parallèle
+    - *Block*: un groupe de threads
+      + les blocks ont accès à la mémoire globale du GPU
+    - *Grid*: composition de blocks
+    
+    Le développeur écris un =kernel= et décide du nombre total de threads
+    qui vont exécuter le programme sur le GPU.
+
+**** CUDA architecture
+     :PROPERTIES:
+     :BEAMER_col: 0.5
+     :BEAMER_env: block
+     :BEAMER_envargs: <2->
+     :END:
+     [[../images/cuda.png]]
+  
+*** Open Computing Language (OpenCL) :B_frame:
+    :PROPERTIES:
+    :BEAMER_env: frame
+    :BEAMER_envargs: [t]
+    :END:
+**** SIMT - Nomenclature
+     :PROPERTIES:
+     :BEAMER_col: 0.45
+     :BEAMER_env: block
+     :END:
+     - *Work Item*: un thread
+     - *Work Group*: un groupe de 64 workitems
+     - *NDRange*: composition de workgroups
+
+**** OpenCL architecture
+     :PROPERTIES:
+     :BEAMER_col: 0.5
+     :BEAMER_env: block
+     :BEAMER_envargs: <2->
+     :END:
+     [[../images/opencl.png]]
+  
+*** OpenACC
+    
+    Librairie de programmation parallèle sur GPU. Ressemble à OpenMP.
+    Gain de performance significatif. Ne modifie que
+    très peu le code. Permet l'utilisation de la mémoire unifiée (mémoire GPU + RAM).
+    Mais code source fermé, utilisation soumis à licence propriétaire.
+    (usage académique gratuit).
+    
+**** OpenMP - CPU
+    :PROPERTIES:
+    :BEAMER_env: frame
+    :END:
+     #+BEGIN_SRC c
+     void vecadd(int n, float *c,
+                  const float *a, const float* b)
+      {
+        #pragma omp parallel for
+        for (int i = 0; i < n; i++)
+          c[i] = a[i] + b[i];
+      }
+     #+END_SRC
+
+**** OpenACC - GPU
+     :PROPERTIES:
+     :BEAMER_env: frame
+     :END:
+     #+BEGIN_SRC c
+      void vecadd(int n, float *c,
+                  const float *a, const float* b)
+      {
+        #pragma acc parallel loop
+        for (int i = 0; i < n; i++)
+          c[i] = a[i] + b[i];
+      }
+    #+END_SRC
 * Techniques de virtualisation de GPU
-** Direct pass-through
-   Instructions IOMMU et VT-D.
-   Performances natives du GPU.
-   Tous les hyperviseurs proposent cette méthode.
-** API Interception
-* 
+** Pourquoi virtualiser les GPU ?
+*** Virtual Desktop Infrastructure
+    - Xen Desktop
+    - VMWare Horizon
+*** SaaS
+    - AutoCAD - Autodesk
+    - Photoshop - Adobe
+*** IaaS
+    - Amazon EC2
+*** Cloud Gaming
+    - Gaikai
+    - Liquidsky
+** Plusieurs techniques
+*** Direct pass-through
+    Instructions I/O-MMU et VT-D.
+    Performances natives du GPU.
+    Tous les hyperviseurs proposent cette méthode.
+*** API Interception
+    - vCUDA (VMRPC)
+    - rCUDA (TCP/IP, API Socket)
+    - gVim (Xen)
+** Comparaison
+   
+* Conclusion
+** Conclusion
+   Il existe différentes architectures de GPU et différentes techniques pour les virtualiser.
+   Plusieurs API peuvent les utiliser afin de bénéficier de leurs puissances de calculs. 
 * Questions ?
+** Avez-vous des questions ?
