@@ -31,11 +31,13 @@
 ** Contexte
    École Normale Supérieure, 13 000 vidéos, cluster OAR.
 
+   #+CAPTION: Source: ENS
    [[../images/ens.jpg]]
 ** De manière plus générale
-   Les applications d'aujourd'hui sont de plus en plus des applications
-   multimédias (audio, vidéo, jeu-vidéo). Les utilisateurs sont de plus en
-   plus exigeant en terme de qualité de service (HD/4K).
+   - Les applications d'aujourd'hui sont de plus en plus des applications
+     multimédias (audio, vidéo, jeu-vidéo).
+   - Les utilisateurs sont de plus en plus exigeant en terme de qualité de service (HD/4K).
+   - Des besoins en calculs toujours plus important.
 * Objectifs
 ** Gain en performance
    - Dans notre contexte:
@@ -55,20 +57,24 @@
 ** Xen
    Paravirtualisateur open-source. Technologie éprouvée et reconnue (Amazon EC2).
 
+   #+CAPTION: Source: Xen
    [[../images/xen.png]]
 ** OAR
    OAR est un gestionnaire de tâches et de ressources pour les infrastructures réparties.
 
+   #+CAPTION: Source: IMAG
    #+ATTR_LaTeX: :width 150
    [[../images/oar.png]]
 ** ffmpeg
    Logiciel de transcodage vidéo pouvant utiliser l'accéleration matérielle pour augmenter la
    rapidité du transcodage.
    
+   #+CAPTION: Source: ffmpeg
    [[../images/ffmpeg.png]]
 ** Architecture 
+   #+CAPTION: Source: JRES 2015, Nicolas Carel
    [[../images/ens.png]]
-* Solutions
+* GPU
 ** GPU
    Microprocesseur massivement parallèle conçu pour accélérer les performances des applications
    graphiques.
@@ -108,6 +114,8 @@
    par le bus PCI Express. Les débits peuvent atteindre jusqu'à 160 Go/s en full-duplex (contre 16 Go/s
    pour le PCI Express).
      
+   #+CAPTION: NVLink. Source: NVidia
+   [[../images/nvlink.png]]
 ** API
 *** General-Purpose Computing
     *Objectif*: utiliser le GPU pour des calculs non graphiques (/deep-learning/, bio-chimie, transcodage vidéo, etc...).
